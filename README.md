@@ -31,8 +31,9 @@ To create an access token, use your pair of access keys and call the [Authentica
    ```plaintext
    npm install
    npm start
+
 ### Access the KYC
-1. Open a browser and go to `http://localhost:3000/kyc-form`
+1. Open a browser and go to `http://localhost:3000`
 2. Enter email and ISO2 country code and click Create Account: This will call Airwallec /accounts/create, it will create a connected account and trigger the KYC emdedded component
 
 
