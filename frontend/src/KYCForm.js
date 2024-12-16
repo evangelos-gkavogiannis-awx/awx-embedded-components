@@ -15,11 +15,16 @@ const KYCForm = () => {
     setLoading(true);
 
     try {
+      
+      const createAccountPayload = { email, countryCode, terms, dataUsage };
+      console.log("Sending request to /api/create-account:", createAccountPayload);
+
       // Step 1: Create account
       const accountResponse = await fetch('http://localhost:5000/api/create-account', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, countryCode, terms, dataUsage })
+        // body: JSON.stringify({ email, countryCode, terms, dataUsage }),
+        body: JSON.stringify(createAccountPayload),
       });
       const { accountId } = await accountResponse.json();
 
@@ -41,8 +46,115 @@ const KYCForm = () => {
 
       alert('SDK initialized successfully!');
 
+      const theme = {
+        "typography": {
+            "fontFace": {
+                "cssFontSource": "https://fonts.googleapis.com/css2?family=Kablammo&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
+            },
+            "fontFamily": "Roboto"
+        },
+        "palette": {
+            "gradients": {
+                "primary": [
+                    "#a47a62",
+                    "#CC9814"
+                ],
+                "secondary": [
+                    "#ce3327",
+                    "#E56820"
+                ]
+            },
+            "error": {
+                "5": "#dabdb7",
+                "10": "#d1aea6",
+                "20": "#c99e95",
+                "30": "#c08f85",
+                "40": "#b78074",
+                "50": "#af7063",
+                "60": "#a46254",
+                "70": "#824e43",
+                "80": "#603a32",
+                "90": "#3f2620",
+                "100": "#1d110f"
+            },
+            "success": {
+                "5": "#d7faea",
+                "10": "#c0f8de",
+                "20": "#a9f5d2",
+                "30": "#92f3c6",
+                "40": "#7bf0ba",
+                "50": "#64eeae",
+                "60": "#4deba2",
+                "70": "#1fe68a",
+                "80": "#15bd6f",
+                "90": "#108f54",
+                "100": "#0b6139"
+            },
+            "secondary": {
+                "5": "#f7fbd6",
+                "10": "#f2f8bf",
+                "20": "#edf6a8",
+                "30": "#e9f391",
+                "40": "#e4f17a",
+                "50": "#dfee63",
+                "60": "#daec4c",
+                "70": "#d1e71e",
+                "80": "#abbe14",
+                "90": "#82900f",
+                "100": "#58620a"
+            },
+            "primary": {
+                "5": "#d9c7f3",
+                "10": "#cbb2ef",
+                "20": "#bd9ceb",
+                "30": "#ae87e6",
+                "40": "#a072e2",
+                "50": "#925ddd",
+                "60": "#8448d9",
+                "70": "#6929c5",
+                "80": "#53209b",
+                "90": "#3c1771",
+                "100": "#260f46"
+            }
+        },
+        "components": {
+            "textInput": {
+                "colors": {
+                    "background": {
+                        "initial": "#2020ea"
+                    }
+                }
+            },
+            "button": {
+                "colors": {
+                    "primary": {
+                        "background": {
+                            "initial": "#3f17d6"
+                        },
+                        "foreground": {
+                            "initial": "#e11d1d"
+                        }
+                    },
+                    "secondary": {
+                        "background": {
+                            "initial": "#7c2626"
+                        },
+                        "foreground": {
+                            "initial": "#515055"
+                        }
+                    },
+                    "danger": {
+                        "background": {
+                            "initial": "#8b2c23"
+                        }
+                    }
+                }
+            }
+        }
+    };
+
       // Step 3: Create the KYC component
-      const element = await createElement('kyc', { hideHeader: true, hideNav: true });
+      const element = await createElement('kyc', { theme: theme });
 
       // Mount the KYC component to the container div
       await element.mount('kyc-container');
