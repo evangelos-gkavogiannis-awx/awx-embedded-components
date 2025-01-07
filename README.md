@@ -12,7 +12,9 @@ This is an implementation of the:
 # Implementations:
 
 KYC component: [KYCForm.js](https://github.com/evangelos-gkavogiannis-awx/awx-embedded-components/blob/main/frontend/src/KYCForm.js)
+
 Beneficiary embedded component: [BeneficiaryForm.js](https://github.com/evangelos-gkavogiannis-awx/awx-embedded-components/blob/main/frontend/src/BeneficiaryForm.js)
+
 Transfer embedded component: [TransferForm.js](https://github.com/evangelos-gkavogiannis-awx/awx-embedded-components/blob/main/frontend/src/TransferForm.js)
 
 ---
