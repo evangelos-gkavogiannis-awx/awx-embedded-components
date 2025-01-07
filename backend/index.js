@@ -117,7 +117,7 @@ app.post('/api/get-auth-code', async (req, res) => {
       console.log('Generated codeChallenge:', codeChallenge);
   
       const authPayload = {
-        scope: ['w:awx_action:transfers_edit'],  // Updated to an array format
+        scope: ['w:awx_action:onboarding'],  // Updated to an array format
         code_challenge: codeChallenge,
         code_challenge_method: 'S256'
       };
@@ -130,10 +130,10 @@ app.post('/api/get-auth-code', async (req, res) => {
         authPayload,
         {
           headers: {
-            Authorization: "Bearer eyJhbGciOiJIUzI1NiJ9.eyJ0eXBlIjoiY2xpZW50IiwiZGMiOiJISyIsImRhdGFfY2VudGVyX3JlZ2lvbiI6IkhLIiwiaXNzZGMiOiJVUyIsImp0aSI6IjdkZWY0NDg0LTIyZDAtNDVkYi04ZGUzLWM0YmUyMzRkYzc1NSIsInN1YiI6ImY5MjE5NTMwLTFhNzAtNDlkMy05ZjMzLTBlYzljNjBiNzlmMiIsImlhdCI6MTczNDM4ODQ3MywiZXhwIjoxNzM0MzkwMjczLCJhY2NvdW50X2lkIjoiMjZjNmNmNGEtMWVhZC00YjM0LWI2MWEtNDEwNTE2ODBiZGU4IiwiYXBpX3ZlcnNpb24iOiIyMDI0LTA5LTI3IiwicGVybWlzc2lvbnMiOlsicjphd3g6KjoqIiwidzphd3g6KjoqIl19.ignnmgcKYMx5fkZZ1Sghywx2NSXnHsTwFxzq6BtIgfs",
+            Authorization: `Bearer ${process.env.API_KEY}`,
             'Content-Type': 'application/json',
-            'x-client-id': process.env.API_CLIENT_ID
-            //'x-on-behalf-of': accountId
+            'x-client-id': process.env.API_CLIENT_ID,
+            'x-on-behalf-of': accountId
           }
         }
       );

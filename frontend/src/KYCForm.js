@@ -23,8 +23,9 @@ const KYCForm = () => {
       const accountResponse = await fetch('http://localhost:5000/api/create-account', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, countryCode, terms, dataUsage })
         // body: JSON.stringify({ email, countryCode, terms, dataUsage }),
-        body: JSON.stringify(createAccountPayload),
+        //body: JSON.stringify(createAccountPayload),
       });
       const { accountId } = await accountResponse.json();
 
@@ -154,7 +155,9 @@ const KYCForm = () => {
     };
 
       // Step 3: Create the KYC component
-      const element = await createElement('kyc', { theme: theme });
+      // const element = await createElement('kyc', { theme: theme });
+
+      const element = await createElement('kyc');
 
       // Mount the KYC component to the container div
       await element.mount('kyc-container');
