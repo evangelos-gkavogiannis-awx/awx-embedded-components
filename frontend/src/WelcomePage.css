@@ -1,98 +1,135 @@
+/* General Container Styles */
 .welcome-container {
-    max-width: 600px;
-    margin: 0 auto;
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 40px 20px;
+  font-family: 'Arial', sans-serif;
+  color: #333;
+}
+
+/* Header Styles */
+.welcome-header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.welcome-header h1 {
+  font-size: 28px;
+  font-weight: 600;
+  margin-bottom: 10px;
+  color: #2c3e50;
+}
+
+.welcome-header p {
+  font-size: 16px;
+  color: #7f8c8d;
+}
+
+/* Categories Container */
+.categories-container {
+  margin-bottom: 30px;
+}
+
+.categories-container h3 {
+  font-size: 18px;
+  margin-bottom: 15px;
+  color: #2c3e50;
+}
+
+/* Button Container Styles */
+.categories {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+/* Button Styles */
+.category {
+  display: block;
+  width: 100%;
+  padding: 15px;
+  text-align: center;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 500;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+/* Button Variants */
+.category:nth-child(1) {
+  background-color: #007bff;
+  color: white;
+}
+
+.category:nth-child(2) {
+  background-color: #28a745;
+  color: white;
+}
+
+.category:nth-child(3) {
+  background-color: #6f42c1;
+  color: white;
+}
+
+/* Hover Effects */
+.category:hover {
+  opacity: 0.9;
+  transform: translateY(-2px);
+}
+
+/* Footer Styles */
+.welcome-footer {
+  text-align: center;
+  margin-top: 20px;
+}
+
+/* Terms and Conditions */
+.terms-container {
+  font-size: 12px;
+  color: #7f8c8d;
+}
+
+.terms-container a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+.terms-container a:hover {
+  text-decoration: underline;
+}
+
+/* Continue Button */
+.continue-button {
+  padding: 12px 24px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: all 0.3s ease;
+}
+
+.continue-button:hover {
+  background-color: #0056b3;
+}
+
+.continue-button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .welcome-container {
     padding: 20px;
-    font-family: Arial, sans-serif;
-    color: #333;
   }
-  
-  .welcome-header {
-    text-align: center;
-    margin-bottom: 20px;
-  }
-  
-  .welcome-header h1 {
-    font-size: 24px;
-    margin-bottom: 10px;
-  }
-  
-  .welcome-header p {
-    font-size: 14px;
-    color: #666;
-  }
-  
-  .categories-container {
-    margin-bottom: 20px;
-  }
-  
-  .categories-container h3 {
-    font-size: 18px;
-    margin-bottom: 10px;
-  }
-  
-  .categories {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-  }
-  
+
   .category {
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    padding: 10px 15px;
-    cursor: pointer;
-    text-align: center;
-    flex: 1 1 calc(50% - 20px); /* Two items per row */
-    box-sizing: border-box;
-    background-color: #f9f9f9;
-    transition: background-color 0.3s, border-color 0.3s;
+    font-size: 14px;
+    padding: 12px;
   }
-  
-  .category:hover {
-    background-color: #f0f0f0;
-    border-color: #bbb;
-  }
-  
-  .category.selected {
-    background-color: #007bff;
-    color: white;
-    border-color: #0056b3;
-  }
-  
-  .welcome-footer {
-    text-align: center;
-  }
-  
-  .terms-container {
-    margin-bottom: 15px;
-    font-size: 12px;
-  }
-  
-  .terms-container a {
-    color: #007bff;
-    text-decoration: none;
-  }
-  
-  .terms-container a:hover {
-    text-decoration: underline;
-  }
-  
-  .continue-button {
-    padding: 10px 20px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
-  }
-  
-  .continue-button:disabled {
-    background-color: #ccc;
-    cursor: not-allowed;
-  }
-  
-  .continue-button:hover:enabled {
-    background-color: #0056b3;
-  }
-  
+}

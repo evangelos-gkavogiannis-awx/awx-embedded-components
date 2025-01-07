@@ -1,10 +1,11 @@
 
 
-# Airwallex KYC Component Implementation
+# Airwallex KYC, Beneficiary and Transfer Embedded Components Implementation
 
 This is an implementation of the:
--  Airwallex KYC component as documented in the [Airwallex Documentation](https://www.airwallex.com/docs/global-treasury__kyc-and-onboarding__embedded-kyc-component).
+- Airwallex KYC component as documented in the [Airwallex Documentation](https://www.airwallex.com/docs/global-treasury__kyc-and-onboarding__embedded-kyc-component).
 - Airwallex Beneficiary component as documented in the [Airwallex Documentation](https://www.airwallex.com/docs/payouts__embedded-beneficiary-component).
+- Airwallex Transfer component as documented in the [Airwallex Documentation](https://www.airwallex.com/docs/payouts__embedded-transfer-component).
 
 ---
 
@@ -36,12 +37,16 @@ To create an access token, use your pair of access keys and call the [Authentica
 
 ### Access the KYC
 1. Open a browser and go to `http://localhost:3000`
-2. Enter email and ISO2 country code and click Create Account: This will call Airwallec /accounts/create, it will create a connected account and trigger the KYC emdedded component
+2. Click on the `Create a Connected Account & Launch KYC`
+3. Enter `email` and `ISO2 country code` and click Create Account: This will call Airwallex `/accounts/create`, it will create a connected account and trigger the KYC emdedded component
 
 ### Access the Beneficiary component
-Update the App.js and the WelcomePage.hs with `/bene-form`
+1. Open a browser and go to `http://localhost:3000`
+2. Click on the `Beneficiary Embedded Component`
 
-
+### Access the Beneficiary component
+1. Open a browser and go to `http://localhost:3000`
+2. Click on the `Transfer Embedded Component`
 
 
 

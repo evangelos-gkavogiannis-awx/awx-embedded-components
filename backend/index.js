@@ -117,7 +117,9 @@ app.post('/api/get-auth-code', async (req, res) => {
       console.log('Generated codeChallenge:', codeChallenge);
   
       const authPayload = {
-        scope: ['w:awx_action:onboarding'],  // Updated to an array format
+        scope: ['w:awx_action:transfers_edit',
+          'w:awx_action:onboarding'
+        ],
         code_challenge: codeChallenge,
         code_challenge_method: 'S256'
       };

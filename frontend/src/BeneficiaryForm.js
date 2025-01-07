@@ -14,7 +14,7 @@ const BeneficiaryForm = () => {
       const authResponse = await fetch('http://localhost:5000/api/get-auth-code', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ accountId: 'your-account-id' }),
+        body: JSON.stringify({ accountId: 'acct_eDWgRsz1PB2U4_TcLsKTzw' }),
       });
       const { authCode, codeVerifier } = await authResponse.json();
 
@@ -109,9 +109,9 @@ const BeneficiaryForm = () => {
           ></div>
 
           {/* Submit Button */}
-          <button onClick={handleSubmit} style={{ marginTop: '20px' }}>
+          {/* <button onClick={handleSubmit} style={{ marginTop: '20px' }}>
             Submit Beneficiary Form
-          </button>
+          </button> */}
         </>
       )}
     </div>

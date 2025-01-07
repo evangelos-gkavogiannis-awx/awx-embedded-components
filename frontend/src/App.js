@@ -5,6 +5,7 @@ import KYCForm from './KYCForm';
 import BeneficiaryForm from './BeneficiaryForm';
 import WelcomePage from './WelcomePage';
 import APIRequestConsole from './APIRequestConsole';
+import TransferForm from './TransferForm';
 import setupAxiosInterceptor from './apiInterceptor';
 
 function App() {
@@ -18,8 +19,9 @@ function App() {
     <Router>
       <Routes>
         <Route path="/" element={<WelcomePage />} />
-        <Route path="/kyc-form" element={<KYCForm />} /> {/* KYCForm route */}
-        //<Route path="/bene-form" element={<BeneficiaryForm />} /> {/* KYCForm route */}
+        <Route path="/kyc-form" element={<KYCForm />} /> KYCForm route
+        <Route path="/bene-form" element={<BeneficiaryForm />} /> {/* Beneficiary Form route */}
+        <Route path="/transfer-form" element={<TransferForm />} /> {/* Transfer Form route */}
       </Routes>
       <APIRequestConsole />
     </Router>
