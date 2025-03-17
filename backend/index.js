@@ -198,6 +198,42 @@ app.post('/api/get-auth-code', ensureAccessToken, async (req, res) => {
       }
   }
 });
+
+
+// API endpoint to create a beneficiary
+app.post('/api/create-beneficiary', ensureAccessToken, async (req, res) => {
+  try {
+      const beneficiaryPayload = req.body; // Frontend sends beneficiary data
+
+      console.log('Received beneficiary creation request:', JSON.stringify(beneficiaryPayload, null, 2));
+
+      // Make request to Airwallex
+      const response = await axios.post(
+          'https://api-demo.airwallex.com/api/v1/beneficiaries/create',
+          beneficiaryPayload,
+          {
+              headers: {
+                  Authorization: `Bearer ${req.accessToken}`, // Use stored token
+                  'Content-Type': 'application/json',
+                  'x-client-id': process.env.API_CLIENT_ID
+              }
+          }
+      );
+
+      console.log('Beneficiary created:', JSON.stringify(response.data, null, 2));
+
+      res.json(response.data); // Return Airwallex response to frontend
+  } catch (error) {
+      if (error.response) {
+          console.error('Error creating beneficiary:', JSON.stringify(error.response.data, null, 2));
+          res.status(500).json({ message: 'Failed to create beneficiary', error: error.response.data });
+      } else {
+          console.error('Error:', error.message);
+          res.status(500).json({ message: 'Failed to create beneficiary', error: error.message });
+      }
+  }
+});
+
   
   
 

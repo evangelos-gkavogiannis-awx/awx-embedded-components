@@ -31,7 +31,7 @@ Transfer embedded component: [TransferForm.js](https://github.com/evangelos-gkav
 3. Install dependencies and start the backend server
    ```plaintext
    npm install
-   node backed/index.js   
+   node backend/index.js   
 ### Frontend Setup
 1. Navigate to the `frontend` folder.
 2. Create a `.env` file and add the following:
@@ -51,6 +51,10 @@ Transfer embedded component: [TransferForm.js](https://github.com/evangelos-gkav
 ### Access the Beneficiary component
 1. Open a browser and go to `http://localhost:3000`
 2. Click on the `Beneficiary Embedded Component`
+3. Select Bank country and account currency
+4. Fill in the required fields
+5. Click on the submit button: The [Airwallex API - Create Beneficiary](https://www.airwallex.com/docs/api#/Payouts/Beneficiaries/_api_v1_beneficiaries_create/post) will be called and a new beneficiary will be created.  
+   (You can check the actual payload sent either from the **API Request Console** on the bottom right corner or from the browser's console)
 
 ### Access the Beneficiary component
 1. Open a browser and go to `http://localhost:3000`

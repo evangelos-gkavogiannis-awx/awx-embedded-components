@@ -82,22 +82,49 @@ const BeneficiaryForm = () => {
       try {
         const results = await beneficiaryComponent.submit();
         console.log('Final payload:', results);
-        alert('Beneficiary submitted successfully!');
+
+        const payload = results.values; // Extract beneficiary data
+
+        // Call backend API to create the beneficiary
+        const response = await fetch('http://localhost:5000/api/create-beneficiary', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(payload) // Send extracted values
+        });
+
+        const responseData = await response.json();
+        console.log('Beneficiary Created:', responseData);
+
+        alert('Beneficiary created successfully!');
       } catch (error) {
         console.error('Submission error:', error);
-        alert('Failed to submit the form');
+        alert('Failed to create the beneficiary');
       }
     }
   };
 
+
   return (
-    <div className="beneficiary-form-container">
+    <div className="beneficiary-form-container" style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', width: '100%' }}>
       <header>
         <h1>Airwallex Embedded Beneficiary Form</h1>
       </header>
 
       {!initialized ? (
-        <button onClick={handleInitialize} disabled={loading}>
+        <button onClick={handleInitialize} disabled={loading} style={{
+          backgroundColor: '#6A0DAD',
+          color: 'white',
+          padding: '10px 20px',
+          fontSize: '16px',
+          fontWeight: 'bold',
+          border: 'none',
+          borderRadius: '5px',
+          cursor: 'pointer',
+          textTransform: 'uppercase',
+          marginTop: '20px'
+        }}>
           {loading ? 'Initializing...' : 'Initialize Beneficiary Form'}
         </button>
       ) : (
@@ -105,13 +132,30 @@ const BeneficiaryForm = () => {
           {/* Step 2: Add a container after initialization */}
           <div
             id="beneficiary-form-container"
-            style={{ width: '100%', height: '500px', marginTop: '20px' }}
+            style={{ width: '100%', minHeight: '500px', marginTop: '20px', display: 'flex', flexDirection: 'column' }}
           ></div>
 
-          {/* Submit Button */}
-          {/* <button onClick={handleSubmit} style={{ marginTop: '20px' }}>
-            Submit Beneficiary Form
-          </button> */}
+          {/* Submit Button - Moves down as form expands */}
+          <button
+            onClick={handleSubmit}
+            style={{
+              backgroundColor: '#6A0DAD', // Purple color
+              color: 'white',
+              padding: '10px 20px',
+              fontSize: '16px',
+              fontWeight: 'bold',
+              border: 'none',
+              borderRadius: '5px',
+              cursor: 'pointer',
+              textTransform: 'uppercase',
+              width: 'fit-content',
+              marginTop: '20px',
+              display: 'block', // Ensures it stays in the natural document flow
+              alignSelf: 'flex-start', // Aligns to the left
+            }}
+          >
+            Submit
+          </button>
         </>
       )}
     </div>
