@@ -14,6 +14,56 @@ app.use(express.json());
 const cors = require('cors');
 app.use(cors());
 
+
+let accessToken = null; // Store access token in memory
+let tokenExpiry = null;  // Track expiry timestamp
+
+/**
+ * Function to fetch a fresh access token
+ */
+const fetchAccessToken = async () => {
+  try {
+      console.log('Fetching new access token...');
+      const response = await axios.post(
+          'https://api-demo.airwallex.com/api/v1/authentication/login',
+          {},
+          {
+              headers: {
+                  'x-client-id': process.env.API_CLIENT_ID,
+                  'x-api-key': process.env.API_KEY
+              }
+          }
+      );
+
+      accessToken = response.data.token;
+      tokenExpiry = new Date(response.data.expires_at).getTime(); // Convert expires_at to timestamp
+
+      console.log('New Access Token:', accessToken);
+      console.log('Token Expiry:', new Date(tokenExpiry).toISOString()); // Log expiry time for debugging
+      return accessToken;
+  } catch (error) {
+      console.error('Error fetching access token:', error.response ? error.response.data : error.message);
+      throw new Error('Failed to retrieve access token');
+  }
+};
+
+
+/**
+ * Middleware to ensure a valid access token before making requests
+ */
+const ensureAccessToken = async (req, res, next) => {
+  try {
+      if (!accessToken || Date.now() >= tokenExpiry - 60 * 1000) {  // Refresh 1 minute before expiry
+          await fetchAccessToken();
+      }
+      req.accessToken = accessToken;
+      next();
+  } catch (error) {
+      res.status(500).json({ message: 'Failed to authenticate', error: error.message });
+  }
+};
+
+
 // Axios request interceptor
 axios.interceptors.request.use(
   (config) => {
@@ -56,103 +106,98 @@ axios.interceptors.response.use(
 );
 
 // API endpoint to create an account
-app.post('/api/create-account', async (req, res) => {
+app.post('/api/create-account', ensureAccessToken, async (req, res) => {
   const { email, countryCode, terms, dataUsage } = req.body;
 
-  // Log the request payload to Airwallex
   const accountPayload = {
-    primary_contact: { email },
-    account_details: {
-      business_details: { registration_address: { country_code: countryCode } }
-    },
-    customer_agreements: {
-      agreed_to_terms_and_conditions: terms,
-      agreed_to_data_usage: dataUsage
-    }
+      primary_contact: { email },
+      account_details: {
+          business_details: { registration_address: { country_code: countryCode } }
+      },
+      customer_agreements: {
+          agreed_to_terms_and_conditions: terms,
+          agreed_to_data_usage: dataUsage
+      }
   };
-  
+
   console.log('Request Payload:', JSON.stringify(accountPayload, null, 2));
-  console.log("Auth key", `Bearer ${process.env.API_KEY}`)
 
   try {
-    const response = await axios.post(
-      'https://api-demo.airwallex.com/api/v1/accounts/create',
-      accountPayload,
-      {
-        headers: {
-          Authorization: `Bearer ${process.env.API_KEY}`,
-          'Content-Type': 'application/json',
-          'x-client-id': process.env.API_CLIENT_ID
-        }
-      }
-    );
+      const response = await axios.post(
+          'https://api-demo.airwallex.com/api/v1/accounts/create',
+          accountPayload,
+          {
+              headers: {
+                  Authorization: `Bearer ${req.accessToken}`,
+                  'Content-Type': 'application/json',
+                  'x-client-id': process.env.API_CLIENT_ID
+              }
+          }
+      );
 
-    // Log the response data from Airwallex
-    console.log('Response Data:', JSON.stringify(response.data, null, 2));
-
-    res.json({ accountId: response.data.id });
+      console.log('Response Data:', JSON.stringify(response.data, null, 2));
+      res.json({ accountId: response.data.id });
   } catch (error) {
-    // Log the error response or error message
-    if (error.response) {
-      console.error('Error Response Data:', JSON.stringify(error.response.data, null, 2));
-      res.status(500).json({ message: 'Failed to create account', error: error.response.data });
-    } else {
-      console.error('Error Message:', error.message);
-      res.status(500).json({ message: 'Failed to create account', error: error.message });
-    }
+      if (error.response) {
+          console.error('Error Response Data:', JSON.stringify(error.response.data, null, 2));
+          res.status(500).json({ message: 'Failed to create account', error: error.response.data });
+      } else {
+          console.error('Error Message:', error.message);
+          res.status(500).json({ message: 'Failed to create account', error: error.message });
+      }
   }
 });
 
 // API endpoint to get authorization code
-app.post('/api/get-auth-code', async (req, res) => {
-    const { accountId } = req.body;
-  
-    console.log('Received request to get authorization code for accountId:', accountId);
-  
-    try {
+app.post('/api/get-auth-code', ensureAccessToken, async (req, res) => {
+  const { accountId } = req.body;
+
+  console.log('Received request to get authorization code for accountId:', accountId);
+
+  try {
       const codeVerifier = generateCodeVerifier();
       const codeChallenge = await generateCodeChallengeFromVerifier(codeVerifier);
-  
+
       console.log('Generated codeVerifier:', codeVerifier);
       console.log('Generated codeChallenge:', codeChallenge);
-  
+
       const authPayload = {
-        scope: ['w:awx_action:transfers_edit',
-          'w:awx_action:onboarding'
-        ],
-        code_challenge: codeChallenge,
-        code_challenge_method: 'S256'
+          scope: [
+              'w:awx_action:transfers_edit',
+              'w:awx_action:onboarding'
+          ],
+          code_challenge: codeChallenge,
+          code_challenge_method: 'S256'
       };
-  
+
       console.log('Authorization Payload:', JSON.stringify(authPayload, null, 2));
-  
-      // Updated the endpoint to the correct one
+
       const response = await axios.post(
-        'https://api-demo.airwallex.com/api/v1/authentication/authorize',
-        authPayload,
-        {
-          headers: {
-            Authorization: `Bearer ${process.env.API_KEY}`,
-            'Content-Type': 'application/json',
-            'x-client-id': process.env.API_CLIENT_ID,
-            'x-on-behalf-of': accountId
+          'https://api-demo.airwallex.com/api/v1/authentication/authorize',
+          authPayload,
+          {
+              headers: {
+                  Authorization: `Bearer ${req.accessToken}`,
+                  'Content-Type': 'application/json',
+                  'x-client-id': process.env.API_CLIENT_ID,
+                  'x-on-behalf-of': accountId
+              }
           }
-        }
       );
-  
+
       console.log('Received response from Airwallex:', JSON.stringify(response.data, null, 2));
-  
+
       res.json({ authCode: response.data.authorization_code, codeVerifier });
-    } catch (error) {
+  } catch (error) {
       if (error.response) {
-        console.error('Error Response Data:', JSON.stringify(error.response.data, null, 2));
-        res.status(500).json({ message: 'Failed to get authorization code', error: error.response.data });
+          console.error('Error Response Data:', JSON.stringify(error.response.data, null, 2));
+          res.status(500).json({ message: 'Failed to get authorization code', error: error.response.data });
       } else {
-        console.error('Error Message:', error.message);
-        res.status(500).json({ message: 'Failed to get authorization code', error: error.message });
+          console.error('Error Message:', error.message);
+          res.status(500).json({ message: 'Failed to get authorization code', error: error.message });
       }
-    }
-  });
+  }
+});
   
   
 
