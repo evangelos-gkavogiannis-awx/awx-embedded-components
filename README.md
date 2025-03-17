@@ -59,6 +59,7 @@ Transfer embedded component: [TransferForm.js](https://github.com/evangelos-gkav
 ### Access the Beneficiary component
 1. Open a browser and go to `http://localhost:3000`
 2. Click on the `Transfer Embedded Component`
+3. Fill in the fields and click on Submit button: the transfer payload will be logged to browser's console can be used to call the [Create a Transfer](https://www.airwallex.com/docs/api#/Payouts/Transfers/_api_v1_transfers_create/post) endpoint
 
 
 
