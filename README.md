@@ -26,9 +26,7 @@ Transfer embedded component: [TransferForm.js](https://github.com/evangelos-gkav
 2. Create a `.env` file and add the following:
    ```plaintext
    API_CLIENT_ID=your_client_id
-   API_KEY=your_access_token
-Notes:
-To create an access token, use your pair of access keys and call the [Authentication API](https://www.airwallex.com/docs/api#/Authentication/API_Access/_api_v1_authentication_login/post)
+   API_KEY=your_api_key
 
 3. Install dependencies and start the backend server
    ```plaintext
