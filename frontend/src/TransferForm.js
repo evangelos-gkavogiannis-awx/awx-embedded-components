@@ -7,11 +7,13 @@ const TransferForm = () => {
   const [error, setError] = useState(null);
   const [transferComponent, setTransferComponent] = useState(null);
 
+
+  //use a KYC approved connected account
   const fetchAuthCode = async () => {
     const response = await fetch('http://localhost:5000/api/get-auth-code', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ accountId: 'acct_eDWgRsz1PB2U4_TcLsKTzw' }),
+      body: JSON.stringify({ accountId: 'acct_eDWgRsz1PB2U4_TcLsKTzw' }), //use a KYC approved connected account
     });
 
     if (!response.ok) throw new Error('Failed to fetch auth code');

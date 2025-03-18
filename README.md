@@ -38,7 +38,8 @@ Transfer embedded component: [TransferForm.js](https://github.com/evangelos-gkav
    ```plaintext
    REACT_APP_API_ENV=demo
    REACT_APP_CLIENT_ID=your_client_id
-3. Install dependencies and start the frontend server
+3. For the `BeneficiaryForm.js` and the `TransferForm.js` use a KYC approved connected account
+4. Install dependencies and start the frontend server
    ```plaintext
    npm install
    npm start

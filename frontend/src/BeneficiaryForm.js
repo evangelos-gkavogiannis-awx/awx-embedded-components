@@ -10,11 +10,11 @@ const BeneficiaryForm = () => {
     setLoading(true);
 
     try {
-      // Step 1: Get auth code
+      // Step 1: Get auth code - use a KYC approved connected account
       const authResponse = await fetch('http://localhost:5000/api/get-auth-code', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ accountId: 'acct_eDWgRsz1PB2U4_TcLsKTzw' }),
+        body: JSON.stringify({ accountId: 'acct_eDWgRsz1PB2U4_TcLsKTzw' }), // use an approved connected account
       });
       const { authCode, codeVerifier } = await authResponse.json();
 
