@@ -53,6 +53,21 @@ const BeneficiaryForm = () => {
 
         const beneficiaryForm = createElement('beneficiaryForm', options);
 
+        //with default values
+        // const beneficiaryForm = createElement('beneficiaryForm', {
+        //   defaultValues: {
+        //     beneficiary: {
+        //       entity_type: 'COMPANY',
+        //       bank_details: {
+        //         account_currency: 'AUD',
+        //         bank_country_code: 'AU',
+        //         local_clearing_system: 'BANK_TRANSFER',
+        //       },
+        //     },
+        //     transfer_methods: ['LOCAL'],
+        //   },
+        // });
+
         if (beneficiaryForm) {
           beneficiaryForm.mount(container);
           setBeneficiaryComponent(beneficiaryForm);
