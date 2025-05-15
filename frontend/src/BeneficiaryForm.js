@@ -14,7 +14,7 @@ const BeneficiaryForm = () => {
       const authResponse = await fetch('http://localhost:5000/api/get-auth-code', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ accountId: 'acct_eDWgRsz1PB2U4_TcLsKTzw' }), // use an approved connected account
+        body: JSON.stringify({ accountId: '' }), // use an approved connected account
       });
       const { authCode, codeVerifier } = await authResponse.json();
 

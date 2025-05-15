@@ -44,6 +44,11 @@ function WelcomePage() {
             KYC Embedded Component
           </Link>
 
+          {/* KYC RFI Form Button */}
+          <Link to="/kycrfi-form" className="category">
+            KYC RFI
+          </Link>
+
           {/* Beneficiary Form Button */}
           <Link to="/bene-form" className="category">
             Beneficiary Embedded Component

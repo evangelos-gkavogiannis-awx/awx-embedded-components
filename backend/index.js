@@ -164,10 +164,13 @@ app.post('/api/get-auth-code', ensureAccessToken, async (req, res) => {
       const authPayload = {
           scope: [
               'w:awx_action:transfers_edit',
-              'w:awx_action:onboarding'
+              'w:awx_action:onboarding',
+              'r:awx_action:rfi_view',
+              'w:awx_action:rfi_edit'
           ],
           code_challenge: codeChallenge,
           code_challenge_method: 'S256'
+          //identity: 'acct_oIKT_zwGPIWCios9uSdHqw'
       };
 
       console.log('Authorization Payload:', JSON.stringify(authPayload, null, 2));

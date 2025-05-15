@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'; // Import Router, Routes, and Route
 import './App.css';
 import KYCForm from './KYCForm';
+import KYCRFIForm from './KYCRFI';
 import BeneficiaryForm from './BeneficiaryForm';
 import WelcomePage from './WelcomePage';
 import APIRequestConsole from './APIRequestConsole';
@@ -20,6 +21,7 @@ function App() {
       <Routes>
         <Route path="/" element={<WelcomePage />} />
         <Route path="/kyc-form" element={<KYCForm />} /> KYCForm route
+        <Route path="/kycrfi-form" element={<KYCRFIForm />} /> KYCRFI route
         <Route path="/bene-form" element={<BeneficiaryForm />} /> {/* Beneficiary Form route */}
         <Route path="/transfer-form" element={<TransferForm />} /> {/* Transfer Form route */}
       </Routes>
