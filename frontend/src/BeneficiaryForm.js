@@ -1,125 +1,108 @@
 import React, { useState, useEffect } from 'react';
-import { init, createElement } from '@airwallex/payouts-web-sdk';
+import { init, createElement } from '@airwallex/components-sdk';
 
 const BeneficiaryForm = () => {
   const [loading, setLoading] = useState(false);
   const [initialized, setInitialized] = useState(false);
   const [beneficiaryComponent, setBeneficiaryComponent] = useState(null);
+  const [authData, setAuthData] = useState(null); // holds authCode + codeVerifier
 
   const handleInitialize = async () => {
     setLoading(true);
-
     try {
-      // Step 1: Get auth code - use a KYC approved connected account
       const authResponse = await fetch('http://localhost:5000/api/get-auth-code', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ accountId: '' }), // use an approved connected account
+        body: JSON.stringify({ accountId: '' }) // valid connected account
       });
+
       const { authCode, codeVerifier } = await authResponse.json();
 
-      // Step 2: Initialize SDK
       await init({
-        langKey: 'en',
+        locale: 'en',
+        env: 'demo',
+        enabledElements: ['onboarding', 'payouts', 'risk'],
         authCode,
         codeVerifier,
-        env: process.env.REACT_APP_API_ENV || 'demo',
         clientId: process.env.REACT_APP_CLIENT_ID,
       });
 
-      console.log('SDK initialized successfully');
-      setInitialized(true); // Trigger rendering of container
-
-    } catch (error) {
-      console.error('Error initializing the SDK:', error);
-      alert('Failed to initialize the SDK');
+      console.log('✅ SDK initialized');
+      setAuthData({ authCode, codeVerifier }); // store it if needed
+      setInitialized(true); // show form container
+    } catch (err) {
+      console.error('❌ Error initializing the SDK:', err);
+      alert('SDK initialization failed.');
     } finally {
       setLoading(false);
     }
   };
 
-  // useEffect to mount the component after the container is rendered
   useEffect(() => {
-    if (initialized) {
-      const container = document.getElementById('beneficiary-form-container');
-      if (container) {
-        const options = {
-          theme: {
-            palette: {
-              primary: { "50": "#925ddd" },
-            },
-          },
-        };
-
-        const beneficiaryForm = createElement('beneficiaryForm', options);
-
-        //with default values
-        // const beneficiaryForm = createElement('beneficiaryForm', {
-        //   defaultValues: {
-        //     beneficiary: {
-        //       entity_type: 'COMPANY',
-        //       bank_details: {
-        //         account_currency: 'AUD',
-        //         bank_country_code: 'AU',
-        //         local_clearing_system: 'BANK_TRANSFER',
-        //       },
-        //     },
-        //     transfer_methods: ['LOCAL'],
-        //   },
-        // });
-
-        if (beneficiaryForm) {
-          beneficiaryForm.mount(container);
-          setBeneficiaryComponent(beneficiaryForm);
-
-          // Event listeners
-          beneficiaryForm.on('ready', () => {
-            console.log('Beneficiary form is ready');
-            setLoading(false);
-          });
-
-          beneficiaryForm.on('error', (event) => {
-            console.error('Form error:', event);
-            alert('An error occurred while rendering the form.');
-            setLoading(false);
-          });
-        } else {
-          console.error('createElement returned null');
+    const mountComponent = async () => {
+      if (initialized) {
+        const container = document.getElementById('beneficiary-form-container');
+        if (!container) {
+          console.error('Container not found in DOM');
+          return;
         }
-      } else {
-        console.error('Container does not exist in the DOM');
+
+        try {
+          const element = await createElement('beneficiaryForm', {
+            defaultValues: {
+              beneficiary: {
+                entity_type: 'COMPANY',
+                bank_details: {
+                  account_currency: 'AUD',
+                  bank_country_code: 'AU',
+                  local_clearing_system: 'BANK_TRANSFER',
+                },
+              },
+              transfer_methods: ['LOCAL'],
+            },
+          });
+
+          element.mount(container);
+          setBeneficiaryComponent(element);
+
+          element.on('ready', () => {
+            console.log('✅ Beneficiary form ready');
+          });
+
+          element.on('error', (event) => {
+            console.error('❌ Form error:', event);
+            alert('Error rendering beneficiary form.');
+          });
+        } catch (error) {
+          console.error('❌ Error mounting element:', error);
+        }
       }
-    }
+    };
+
+    mountComponent();
   }, [initialized]);
 
   const handleSubmit = async () => {
     if (beneficiaryComponent) {
       try {
         const results = await beneficiaryComponent.submit();
-        console.log('Final payload:', results);
+        const payload = results.values;
 
-        const payload = results.values; // Extract beneficiary data
-
-        // Call backend API to create the beneficiary
         const response = await fetch('http://localhost:5000/api/create-beneficiary', {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(payload) // Send extracted values
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
         });
 
-        const responseData = await response.json();
-        console.log('Beneficiary Created:', responseData);
-
+        const data = await response.json();
         alert('Beneficiary created successfully!');
+        console.log('Created beneficiary:', data);
       } catch (error) {
-        console.error('Submission error:', error);
-        alert('Failed to create the beneficiary');
+        console.error('❌ Submission error:', error);
+        alert('Failed to create beneficiary.');
       }
     }
   };
-
 
   return (
     <div className="beneficiary-form-container" style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', width: '100%' }}>
@@ -144,17 +127,21 @@ const BeneficiaryForm = () => {
         </button>
       ) : (
         <>
-          {/* Step 2: Add a container after initialization */}
           <div
             id="beneficiary-form-container"
-            style={{ width: '100%', minHeight: '500px', marginTop: '20px', display: 'flex', flexDirection: 'column' }}
+            style={{
+              width: '100%',
+              minHeight: '600px',
+              marginTop: '20px',
+              display: 'flex',
+              flexDirection: 'column'
+            }}
           ></div>
 
-          {/* Submit Button - Moves down as form expands */}
           <button
             onClick={handleSubmit}
             style={{
-              backgroundColor: '#6A0DAD', // Purple color
+              backgroundColor: '#6A0DAD',
               color: 'white',
               padding: '10px 20px',
               fontSize: '16px',
@@ -163,10 +150,8 @@ const BeneficiaryForm = () => {
               borderRadius: '5px',
               cursor: 'pointer',
               textTransform: 'uppercase',
-              width: 'fit-content',
               marginTop: '20px',
-              display: 'block', // Ensures it stays in the natural document flow
-              alignSelf: 'flex-start', // Aligns to the left
+              alignSelf: 'flex-start',
             }}
           >
             Submit
